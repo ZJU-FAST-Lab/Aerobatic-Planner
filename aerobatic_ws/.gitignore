@@ -1,0 +1,6 @@
+build/
+devel/
+src/intention_get_corridor/config/test_corridor.txt
+src/CMakeLists.txt
+.catkin_workspace
+.vscode/

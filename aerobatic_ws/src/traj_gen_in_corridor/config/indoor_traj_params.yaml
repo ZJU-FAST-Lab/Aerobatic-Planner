@@ -1,0 +1,23 @@
+## params for trajectory generation
+TargetTopic: "/goal"
+TriggerTopic: "/trigger"
+OdomTopic: "/visual_slam/odom"
+
+TrajTopic: "/trajectory_generator_node/trajectory"
+VisTrajTopic: "/trajectory_generator_node/forvis_trajectory"
+MaxOmgRate: 7
+MaxVelRate: 7.0
+MaxTau: 20.0
+MinTau: 7.0
+MaxRange: 0.5
+
+WeightT: 2.0e+4
+
+ChiVec: [1.0e+6, 1.0e+4, 1.0e+4, 1.0e+4, 1.0e+7, 1.0e+7, 1.0]
+SmoothingEps: 1.0e-2
+RelCostTol: 1.0e-7
+QuadratureResolution: 5
+FlipResolution: 40
+deltaT: 0.1
+debug: true
+opt_settime: true

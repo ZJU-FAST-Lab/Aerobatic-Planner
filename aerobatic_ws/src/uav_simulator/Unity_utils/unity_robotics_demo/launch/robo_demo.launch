@@ -1,0 +1,5 @@
+<launch>
+    <param name="ROS_IP" value="127.0.0.1" />
+    <node name="position_service" pkg="unity_robotics_demo" type="position_service.py" args="--wait" output="screen" respawn="true" />
+    <node name="server_endpoint" pkg="ros_tcp_endpoint" type="default_server_endpoint.py" args="--wait" output="screen" respawn="true" />
+</launch>

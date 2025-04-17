@@ -1,0 +1,8 @@
+<launch>
+    <node pkg="traj_server" type="traj_server_node" name="traj_server" output="screen" launch-prefix="">
+        <remap from="~/joy" to="/nouse"/>
+        <remap from="~/position_command" to="/position_cmd"/>
+        <remap from="~/odometry" to="/OdometryPropogated"/>
+        <remap from="~/trajectory" to="/trajectory_generator_node/trajectory"/>
+	</node>
+</launch>

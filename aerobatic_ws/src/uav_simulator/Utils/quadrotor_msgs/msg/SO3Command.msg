@@ -1,0 +1,10 @@
+Header header
+geometry_msgs/Vector3 force
+geometry_msgs/Quaternion orientation
+geometry_msgs/Vector3 omega
+float64 yaw
+float64 yaw_dot
+float64[3] kOmP
+float64[3] kOmI
+float64[3] kOmD
+quadrotor_msgs/AuxCommand aux

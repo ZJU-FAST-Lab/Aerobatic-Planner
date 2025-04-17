@@ -1,0 +1,29 @@
+## params for trajectory generation
+TargetTopic: "/goal"
+TriggerTopic: "/trigger"
+OdomTopic: "/visual_slam/odom"
+
+TrajTopic: "/trajectory_generator_node/trajectory"
+VisTrajTopic: "/trajectory_generator_node/forvis_trajectory"
+CorridorPath: "/config/aero_corridor.txt"
+
+MaxOmgRate: 5
+# MaxOmgRate: 4 
+# 4 rad/s is the real world expriment param. More optimization attempts may be required because it's more extreme.
+# 5 rad/s can achieve a 100% optimization success rate.
+
+MaxVelRate: 10.0
+MaxTau: 15.0
+MinTau: 7.0
+MaxRange: 1.0
+
+WeightT: 2.0e+3 
+
+ChiVec: [1.0e+6, 1.0e+4, 1.0e+4, 1.0e+4, 1.0e+6, 1.0e+6, 1.0]
+SmoothingEps: 1.0e-2
+RelCostTol: 1.0e-7
+QuadratureResolution: 5
+FlipResolution: 40
+deltaT: 0.1
+debug: true
+opt_settime: true

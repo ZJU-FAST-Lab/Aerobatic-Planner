@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<launch>
+	<node name="rviz" pkg="rviz" type="rviz" output="screen" args="-d $(find intention_get_corridor)/config/outdoor_rviz.rviz">
+	</node>
+
+	<node pkg="intention_get_corridor" type="intention_get_corridor_node" name="intention_get_corridor" output="screen">
+		<param name="RunInConsole" type="bool" value="0" />
+		<rosparam file="$(find intention_get_corridor)/config/outdoor_params.yaml" command="load" />
+	</node>
+
+	<node pkg="traj_gen_in_corridor" type="traj_gen_in_corridor_node" name="traj_gen_in_corridor" output="screen">
+		<rosparam file="$(find traj_gen_in_corridor)/config/outdoor_traj_params.yaml" command="load" />
+	</node>
+
+	<node pkg="traj_server" type="traj_server_node" name="traj_server" output="screen">
+		<remap from="~/joy" to="/nouse"/>
+		<remap from="~/position_command" to="/position_cmd"/>
+		<remap from="~/odometry" to="/visual_slam/odom"/>
+		<remap from="~/trajectory" to="/trajectory_generator_node/trajectory"/>
+		<param name="traj_server/control_yaw" value="true"/>
+	</node>
+
+	<!-- use simulator -->
+	<arg name="init_x_" value="0.0"/>
+	<arg name="init_y_" value="0.0"/>
+	<arg name="init_z_" value="1.0"/>
+
+	<node pkg="so3_quadrotor_simulator" type="quadrotor_simulator_so3" name="quadrotor_simulator_so3" output="screen">
+		<param name="rate/odom" value="200.0"/>
+		<param name="simulator/init_state_x" value="$(arg init_x_)"/>
+		<param name="simulator/init_state_y" value="$(arg init_y_)"/>
+		<param name="simulator/init_state_z" value="$(arg init_z_)"/>
+
+		<remap from="~odom" to="/visual_slam/odom"/>
+		<remap from="~cmd" to="so3_cmd"/>
+		<remap from="~force_disturbance" to="force_disturbance"/>
+		<remap from="~moment_disturbance" to="moment_disturbance"/>
+	</node>
+
+	<node pkg="nodelet" type="nodelet" args="standalone so3_control/SO3ControlNodelet" name="so3_control" required="true" output="screen">
+		<param name="so3_control/init_state_x" value="$(arg init_x_)"/>
+		<param name="so3_control/init_state_y" value="$(arg init_y_)"/>
+		<param name="so3_control/init_state_z" value="$(arg init_z_)"/>
+		<remap from="~odom" to="/visual_slam/odom"/>
+		<remap from="~position_cmd" to="/position_cmd"/>
+		<remap from="~motors" to="motors"/>
+		<remap from="~corrections" to="corrections"/>
+		<remap from="~so3_cmd" to="so3_cmd"/>
+		<remap from="~imu" to="/quadrotor_simulator_so3/imu" />
+		<rosparam file="$(find so3_control)/config/gains_hummingbird.yaml"/>
+		<rosparam file="$(find so3_control)/config/corrections_hummingbird.yaml"/>
+		<param name="mass" value="0.98"/>
+		<param name="use_angle_corrections " value="false"/>
+		<param name="use_external_yaw " value="false"/>
+	</node>
+
+	<node pkg="odom_visualization" name="true_odom_vis" type="odom_visualization" output="screen">
+		<remap from="~odom" to="/visual_slam/odom"/>
+		<param name="color/a" value="0.0"/>
+		<param name="color/r" value="0.0"/>
+		<param name="color/g" value="0.0"/>
+		<param name="color/b" value="0.0"/>
+		<param name="frame_id" value="world"/>
+
+		<param name="covariance_scale" value="100.0"/>
+		<param name="robot_scale" value="1.0"/>
+		<param name="tf45" value="true"/>
+	</node>
+
+	<node pkg="traj_server" type="traj_server_node" name="fake_traj_server" output="screen" launch-prefix="">
+		<remap from="~/joy" to="/nouse"/>
+		<remap from="~/position_command" to="/fake_pos_cmd"/>
+		<remap from="~/odometry" to="/fake_drone/odom"/>
+		<remap from="~/trajectory" to="/trajectory_generator_node/forvis_trajectory"/>
+		<param name="traj_server/control_yaw" value="true"/>
+		<param name="slow_speed" value="1.0" />
+		<param name="start_slow_time" value="0.0" />
+		<param name="use_yaw_comp" value="true" />
+	</node>
+
+	<node pkg="poscmd_2_odom" name="poscmd_2_odom" type="poscmd_2_odom" output="screen">
+        <param name="init_x" value="$(arg init_x_)"/>
+        <param name="init_y" value="$(arg init_y_)"/>
+        <param name="init_z" value="$(arg init_z_)"/>
+        <remap from="~command" to="/fake_pos_cmd"/>
+        <remap from="~odometry" to="/fake_drone/odom"/>
+  </node>
+
+  <node pkg="odom_visualization" name="fake_odom_vis" type="odom_visualization" output="screen">
+		<remap from="~odom" to="/fake_drone/odom"/>
+		<param name="color/a" value="0.0"/>
+		<param name="color/r" value="0.0"/>
+		<param name="color/g" value="0.0"/>
+		<param name="color/b" value="0.0"/>
+		<param name="frame_id" value="world"/>
+
+		<param name="covariance_scale" value="100.0"/>
+		<param name="robot_scale" value="1.0"/>
+		<param name="tf45" value="false"/>
+	</node>
+
+
+</launch>

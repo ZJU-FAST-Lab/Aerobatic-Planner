@@ -1,0 +1,14 @@
+uint32 iter
+uint8 line_search_count
+float64 gnorm
+float64 total_cost
+float64 time_cost
+float64 ctrl_cost
+float64 pos_cost
+float64 vel_cost
+float64 acc_cost
+float64 omg_cost
+float64 flip_cost_sum
+float64 flip_pos_cost_sum
+float64[] flip_cost
+float64[] flip_pos_cost
